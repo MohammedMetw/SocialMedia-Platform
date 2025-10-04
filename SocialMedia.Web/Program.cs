@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity.UI.Services; 
-using SocialMedia.Infrastructure.Services;     
+using SocialMedia.Infrastructure.Services;
+using SocialMedia.Application.Common.Settings;
 
 namespace SocialMedia.Web
 {
@@ -17,10 +18,14 @@ namespace SocialMedia.Web
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddIdentity<SocialMedia.Domain.Entities.ApplicationUser, IdentityRole>()
-           .AddEntityFrameworkStores<SocialMedia.Infrastructure.Persistence.SocialMediaDbContext>();
+           .AddEntityFrameworkStores<SocialMedia.Infrastructure.Persistence.SocialMediaDbContext>()
+           .AddDefaultTokenProviders();
 
 
+            
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
