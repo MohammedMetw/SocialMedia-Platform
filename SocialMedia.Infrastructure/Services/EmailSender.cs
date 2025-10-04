@@ -16,23 +16,30 @@ namespace SocialMedia.Infrastructure.Services
         }
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            using( var smtp = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.Port))
+            try
             {
-                smtp.Credentials = new NetworkCredential(_emailSettings.SenderEmail, _emailSettings.Password);
-                smtp.EnableSsl = true;
-
-                var mail = new MailMessage
+                using (var smtp = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.Port))
                 {
-                    From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
-                    Subject = subject,
-                    Body = htmlMessage,
-                    IsBodyHtml = true
-                };
-                mail.To.Add(email);
+                    smtp.Credentials = new NetworkCredential(_emailSettings.SenderEmail, _emailSettings.Password);
+                    smtp.EnableSsl = true;
 
-              await smtp.SendMailAsync(mail);
+                    var mail = new MailMessage
+                    {
+                        From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
+                        Subject = subject,
+                        Body = htmlMessage,
+                        IsBodyHtml = true
+                    };
+                    mail.To.Add(email);
+
+                    await smtp.SendMailAsync(mail);
+                }
             }
-            
+            catch (Exception ex)
+            {
+                // waiting for implementation
+            }
+
         }
     }
 }
