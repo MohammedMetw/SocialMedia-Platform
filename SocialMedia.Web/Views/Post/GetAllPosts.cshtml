@@ -1,0 +1,44 @@
+﻿@model IEnumerable<SocialMedia.Application.Dtos.PostDto>
+
+@{
+    ViewData["Title"] = "Feed";
+}
+
+<div class="container">
+    <h1 class="my-4">@ViewData["Title"]</h1>
+
+    <p>
+        <a asp-action="Create" asp-controller="Post" class="btn btn-primary">Create New Post</a>
+    </p>
+
+    @if (!Model.Any())
+    {
+        <p>No posts yet. Be the first to create one!</p>
+    }
+    else
+    {
+        @foreach (var post in Model)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@post.AuthorFirstName</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@post.CreatedDate.ToShortDateString()</h6>
+                    <p class="card-text">@post.Content</p>
+
+                    @if (post.Images.Any())
+                    {
+                        <div class="d-flex flex-wrap">
+                            @foreach (var image in post.Images)
+                            {
+                                <img src="@image.ImageUrl" class="img-thumbnail" alt="Post Image" style="max-width: 200px; margin: 5px;" />
+                            }
+                        </div>
+                    }
+
+                    <hr />
+                    <p class="card-text"><small class="text-muted">@post.ReactionCount Reactions</small></p>
+                </div>
+            </div>
+        }
+    }
+</div>

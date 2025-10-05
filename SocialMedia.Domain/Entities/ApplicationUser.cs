@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using SocialMedia.Domain.Entities.posts;
 
 namespace SocialMedia.Domain.Entities
 {
@@ -14,5 +15,7 @@ namespace SocialMedia.Domain.Entities
 
         
         public required string FirstName { get; set; }
+
+        public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
     }
 }

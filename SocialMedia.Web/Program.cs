@@ -4,6 +4,9 @@ using SocialMedia.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity.UI.Services; 
 using SocialMedia.Infrastructure.Services;
 using SocialMedia.Application.Common.Settings;
+using SocialMedia.Application.Interface;
+using SocialMedia.Infrastructure.Repository;
+using SocialMedia.Application.Features.Post.Query;
 
 namespace SocialMedia.Web
 {
@@ -25,8 +28,9 @@ namespace SocialMedia.Web
             
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllPostsQuery).Assembly));
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
