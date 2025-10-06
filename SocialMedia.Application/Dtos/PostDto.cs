@@ -11,7 +11,7 @@ namespace SocialMedia.Application.Dtos
         public int Id { get; set; }
         public string Content { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string AuthorFirstName { get; set; }
+        public string AuthorfullName { get; set; }
         public List<PostImageDto> Images { get; set; }
         public List<ReactionDto> Reactions { get; set; }
         public int ReactionCount { get; set; }

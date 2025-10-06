@@ -4,6 +4,6 @@ namespace SocialMedia.Application.Interface
 {
     public interface IReactionRepository : IGeniricRepository<Reaction>
     {
-       
+       Task<IEnumerable<Reaction>> GetAllReactionPost(int postID);
     }
 }

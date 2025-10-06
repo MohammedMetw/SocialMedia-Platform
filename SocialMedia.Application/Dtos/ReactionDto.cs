@@ -9,6 +9,6 @@ namespace SocialMedia.Application.Dtos
     public class ReactionDto
     {
         public string ReactionType { get; set; }
-        public string UserFirstName { get; set; }
+        public string UserName { get; set; }
     }
 }

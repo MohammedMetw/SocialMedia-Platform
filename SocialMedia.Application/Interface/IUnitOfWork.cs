@@ -8,9 +8,9 @@ namespace SocialMedia.Application.Interface
 {
     public interface IUnitOfWork : IDisposable
     {
-        public IPostRepository PostRepository { get; }
-        public IPostImageRepository PostImageRepository { get; }
-        public IReactionRepository ReactionRepository { get; }
+         IPostRepository PostRepository { get; }
+         IPostImageRepository PostImageRepository { get; }
+         IReactionRepository ReactionRepository { get; }
 
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

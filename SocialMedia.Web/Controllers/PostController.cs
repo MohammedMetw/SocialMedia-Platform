@@ -4,6 +4,8 @@ using SocialMedia.Application.Features.Post.Query;
 using SocialMedia.Application.Features.Post.Command;
 using Microsoft.AspNetCore.Identity;
 using SocialMedia.Domain.Entities;
+using SocialMedia.Application.Features.Reaction.Command;
+using SocialMedia.Application.Features.Post.Reaction.Query;
 
 namespace SocialMedia.Web.Controllers
 {
@@ -38,5 +40,30 @@ namespace SocialMedia.Web.Controllers
             var result = await _mediator.Send(command);
             return RedirectToAction(nameof(GetAllPosts));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddReaction(int postId, string reactionType)
+        {
+            var command = new AddReactionCommand
+            {
+                PostId = postId,
+                ReactionType = reactionType,
+                UserId = _userManager.GetUserId(User) 
+            };
+
+            await _mediator.Send(command);
+            return RedirectToAction(nameof(GetAllPosts));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetReactionsForPost(int postId)
+        {
+            var query = new GetAllReactionPostQuery { PostId = postId };
+            var reactions = await _mediator.Send(query);
+
+            return Json(reactions);
+        }
+
     }
 }

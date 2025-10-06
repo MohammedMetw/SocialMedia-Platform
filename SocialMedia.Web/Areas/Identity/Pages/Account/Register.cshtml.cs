@@ -75,6 +75,11 @@ namespace SocialMedia.Web.Areas.Identity.Pages.Account
             [StringLength(100)]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(100)]
+            [Display(Name = "First Name")]
+            public string SecondName { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -123,6 +128,7 @@ namespace SocialMedia.Web.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
                 user.FirstName = Input.FirstName;
+                user.SecondName = Input.SecondName;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
