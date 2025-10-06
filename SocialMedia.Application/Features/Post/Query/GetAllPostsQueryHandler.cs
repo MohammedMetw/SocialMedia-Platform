@@ -27,7 +27,7 @@ namespace SocialMedia.Application.Features.Post.Query
                 Content = p.Content,
                 CreatedDate = p.CreatedDate,
                 AuthorFirstName = p.ApplicationUser.FirstName,
-                Images = p.Images.Select(img => new PostImageDto { Id = img.Id, ImageUrl = img.ImagePath }).ToList(),
+                Images = p.Images.Select(img => new PostImageDto { Id = img.Id, ImagePath = img.ImagePath }).ToList(),
                 ReactionCount = p.Reactions.Count(),
                 Reactions = p.Reactions.Select(r => new ReactionDto { ReactionType = r.Reactiontype, UserFirstName = r.ApplicationUser.FirstName }).ToList()
                 

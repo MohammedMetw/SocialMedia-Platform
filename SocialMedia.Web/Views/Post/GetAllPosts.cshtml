@@ -8,7 +8,7 @@
     <h1 class="my-4">@ViewData["Title"]</h1>
 
     <p>
-        <a asp-action="Create" asp-controller="Post" class="btn btn-primary">Create New Post</a>
+        <a asp-action="CreatePost" asp-controller="Post" class="btn btn-primary">Create New Post</a>
     </p>
 
     @if (!Model.Any())
@@ -30,7 +30,7 @@
                         <div class="d-flex flex-wrap">
                             @foreach (var image in post.Images)
                             {
-                                <img src="@image.ImageUrl" class="img-thumbnail" alt="Post Image" style="max-width: 200px; margin: 5px;" />
+                                <img src="@image.ImagePath" class="img-thumbnail" alt="Post Image" style="max-width: 200px; margin: 5px;" />
                             }
                         </div>
                     }
