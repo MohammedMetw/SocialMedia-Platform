@@ -36,5 +36,18 @@ namespace SocialMedia.Infrastructure.Services
 
             return $"/images/{subfolder}/{uniqueFileName}";
         }
+        public void DeleteFile(string relativePath)
+        {
+            if (string.IsNullOrEmpty(relativePath))
+                return;
+
+        
+            string absolutePath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath.TrimStart('/'));
+
+            if (File.Exists(absolutePath))
+            {
+                File.Delete(absolutePath);
+            }
+        }
     }
 }

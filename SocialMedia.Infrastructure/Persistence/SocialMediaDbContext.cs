@@ -22,21 +22,43 @@ namespace SocialMedia.Infrastructure.Persistence
         {
             base.OnModelCreating(builder);
 
+            // --- Define Primary Keys ---
             builder.Entity<Reaction>()
-                 .HasKey(r => new { r.ApplicationUserId, r.PostId }); // prevent many reaction of a user in same post
+                   .HasKey(r => new { r.ApplicationUserId, r.PostId });
 
-            builder.Entity<Reaction>()
-                .HasOne(r => r.Post)
-                .WithMany(p => p.Reactions)
-                .HasForeignKey(r => r.PostId)
-                .OnDelete(DeleteBehavior.Restrict); 
+            // --- Define Relationships ---
 
-            
-            builder.Entity<Reaction>()
-                .HasOne(r => r.ApplicationUser)
-                .WithMany(u => u.Reactions)
-                .HasForeignKey(r => r.ApplicationUserId)
-                .OnDelete(DeleteBehavior.Restrict); 
+            // When a User is deleted, their Posts are deleted.
+            builder.Entity<ApplicationUser>()
+                .HasMany(u => u.Posts)
+                .WithOne(p => p.ApplicationUser)
+                .HasForeignKey(p => p.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+           
+            builder.Entity<Post>()
+                .HasOne(p => p.ApplicationUser)
+                .WithMany(u => u.Posts)
+                .HasForeignKey(p => p.ApplicationUserId)
+                .OnDelete(DeleteBehavior.NoAction); 
+
+            // When a Post is deleted, its children are deleted.
+            builder.Entity<Post>()
+                .HasMany(p => p.Images)
+                .WithOne(i => i.Post)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Post>()
+                .HasMany(p => p.Reactions)
+                .WithOne(r => r.Post)
+                .OnDelete(DeleteBehavior.Cascade);
+
+          
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(u => u.Reactions)
+                .WithOne(r => r.ApplicationUser)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
     }

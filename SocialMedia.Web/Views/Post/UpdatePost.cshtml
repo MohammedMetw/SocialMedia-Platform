@@ -1,23 +1,41 @@
-﻿@model SocialMedia.Application.Features.Post.Command.CreatePostCommand
+﻿@model SocialMedia.Application.Features.Post.Command.UpdatePostCommand
 
-<form asp-action="CreatePost" method="post" enctype="multipart/form-data">
+<h1 class="my-4">Update Post</h1>
+
+<form asp-action="UpdatePost" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="All" class="text-danger"></div>
 
+    <input type="hidden" asp-for="PostId" />
+
     <div class="form-group mb-3">
-        <label asp-for="Content">What's on your mind?</label>
+        <label asp-for="Content" class="form-label">What do you want to change?</label>
         <textarea asp-for="Content" class="form-control" rows="3"></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
 
     <div class="form-group mb-3">
-        <label>Add Images</label>
+        @if (Model.ExistingImages.Any())
+        {
+            <label class="form-label">Current Images</label>
+            <div id="existing-image-container" class="d-flex flex-wrap mt-2 mb-3">
+                @foreach (var image in Model.ExistingImages)
+                {
+                    <div style="position: relative; margin: 5px;">
+                        <img src="@image.ImagePath" class="img-thumbnail" style="max-width: 100px;" />
+                    </div>
+                }
+            </div>
+        }
+
+        <label class="form-label">Replace with New Images</label>
         <input asp-for="Images" type="file" id="image-input" class="form-control" multiple style="display: none;" />
-        <button type="button" id="add-image-btn" class="btn btn-secondary">Choose Files</button>
+
+        <button type="button" id="add-image-btn" class="btn btn-secondary">Choose New Files</button>
+
         <div id="image-preview-container" class="d-flex flex-wrap mt-2"></div>
     </div>
-
-    <button type="submit" class="btn btn-primary">Post</button>
+    <button type="submit" class="btn btn-primary mt-3">Update Post</button>
 </form>
 
 @section Scripts {
@@ -36,11 +54,13 @@
             });
 
             imageInput.addEventListener('change', function(event) {
+                // For an update form, we clear the old selection completely to replace images
+                fileStore = new DataTransfer();
                 for (let i = 0; i < event.target.files.length; i++) {
                     fileStore.items.add(event.target.files[i]);
                 }
                 renderPreviews();
-                event.target.value = '';
+                event.target.value = ''; // Clear input to allow re-selecting the same file
             });
 
             function renderPreviews() {
@@ -103,8 +123,8 @@
                 }).then(response => {
                     if (response.ok && response.redirected) {
                         window.location.href = response.url;
-                    } else if (!response.ok) {
-                     
+                    } else {
+                        // Reload to show server validation errors if submission fails
                         window.location.reload();
                     }
                 }).catch(error => {

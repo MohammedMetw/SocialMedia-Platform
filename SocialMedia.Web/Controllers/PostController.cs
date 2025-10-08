@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using SocialMedia.Domain.Entities;
 using SocialMedia.Application.Features.Reaction.Command;
 using SocialMedia.Application.Features.Post.Reaction.Query;
+using SocialMedia.Application.Interface;
+using SocialMedia.Application.Dtos;
 
 namespace SocialMedia.Web.Controllers
 {
@@ -13,10 +15,12 @@ namespace SocialMedia.Web.Controllers
     {
         private readonly IMediator _mediator;
         private readonly UserManager<ApplicationUser> _userManager;
-        public PostController(IMediator mediator,UserManager<ApplicationUser> userManager)  
+        private readonly IUnitOfWork _unitOfWork;
+        public PostController(IMediator mediator,UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)  
         {
             _mediator = mediator;
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
         public async Task<IActionResult> GetAllPosts()
         {
@@ -55,6 +59,52 @@ namespace SocialMedia.Web.Controllers
             await _mediator.Send(command);
             return RedirectToAction(nameof(GetAllPosts));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdatePost(int postId)
+        {
+            var post = await _unitOfWork.PostRepository.GetPostWithDetailsAsync(postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var command = new UpdatePostCommand
+            {
+                PostId = post.Id,
+                Content = post.Content,
+                ExistingImages = post.Images.Select(img => new PostImageDto
+                {
+                    Id = img.Id,
+                    ImagePath = img.ImagePath
+                }).ToList()
+            };
+
+            return View(command);
+        }
+
+        [HttpPost] 
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePost(UpdatePostCommand command)
+        {
+
+            var result = await _mediator.Send(command);
+            return RedirectToAction(nameof(GetAllPosts));
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePost(int postId)
+        {
+            var command = new DeletePostCommand { PostId = postId };
+            await _mediator.Send(command);
+            return RedirectToAction(nameof(GetAllPosts));
+        }
+
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> GetReactionsForPost(int postId)

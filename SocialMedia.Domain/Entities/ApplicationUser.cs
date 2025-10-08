@@ -12,11 +12,11 @@ namespace SocialMedia.Domain.Entities
     public class ApplicationUser : IdentityUser
     {
         public string? ImgPath { get; set; }
-
-        
         public required string FirstName { get; set; }
         public required string SecondName { get; set; }
+        public ICollection<Reaction> Reactions { get; set; }
 
-        public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
+         
+        public ICollection<Post> Posts { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace SocialMedia.Application.Interface
     public interface IPostRepository : IGeniricRepository<Post>
     {
         Task<IEnumerable<Post>> GetAllPostsAsync();
+        Task<Post> GetPostWithDetailsAsync(int id);
     }
 }

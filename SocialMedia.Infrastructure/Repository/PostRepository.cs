@@ -30,6 +30,15 @@ namespace SocialMedia.Infrastructure.Repository
                         .OrderByDescending(p => p.CreatedDate)
                         .ToListAsync();
         }
+        public async Task<Post> GetPostWithDetailsAsync(int id)
+        {
+            return await _context.Posts
+                .Include(p => p.ApplicationUser)
+                .Include(p => p.Images)
+                .Include(p => p.Reactions)
+                    .ThenInclude(r => r.ApplicationUser)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }
 

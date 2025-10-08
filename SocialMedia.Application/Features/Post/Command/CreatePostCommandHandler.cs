@@ -46,7 +46,6 @@ namespace SocialMedia.Application.Features.Post.Command
             }
 
             await _unitOfWork.PostRepository.AddAsync(post);
-
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
           

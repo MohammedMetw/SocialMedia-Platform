@@ -11,5 +11,6 @@ namespace SocialMedia.Application.Interface
     public interface IFileStorageService
     {
         Task<string> SaveFileAsync(IFormFile file, string subfolder);
+        void DeleteFile(string relativePath);
     }
 }
